@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe &mdash; Moda Feminina</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *, ::before, ::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; scroll-padding-top:80px; }
+        body {
+            font-family:'Inter',sans-serif; color:#1a1a1a;
+            background:#fafafa; overflow-x:hidden;
+        }
+        h1,h2,h3,h4 { font-family:'Playfair Display',serif; }
+        .container { max-width:1200px; margin:0 auto; padding:0 24px; }
+        .section { padding:100px 0; }
+        .text-center { text-align:center; }
+
+        .reveal { opacity:0; transform:translateY(50px); transition:all 0.8s cubic-bezier(0.16,1,0.3,1); }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position:fixed; top:0; width:100%; z-index:1000;
+            padding:22px 0; transition:all 0.4s;
+        }
+        .navbar.scrolled {
+            background:#fff; padding:14px 0;
+            box-shadow:0 2px 30px rgba(0,0,0,0.08);
+        }
+        .navbar .container {
+            display:flex; align-items:center;
+            justify-content:space-between;
+        }
+        .logo {
+            font-family:'Playfair Display',serif;
+            font-size:1.8rem; font-weight:700;
+            letter-spacing:3px; color:#fff;
+            text-decoration:none; transition:color 0.3s;
+        }
+        .navbar.scrolled .logo { color:#1a1a1a; }
+        .logo span { color:#c9a96e; }
+        .navbar.scrolled .logo span { color:#c9a96e; }
+
+        .nav-links { display:flex; gap:36px; list-style:none; }
+        .nav-links a {
+            color:#fff; text-decoration:none;
+            font-size:0.85rem; font-weight:500;
+            letter-spacing:2px; text-transform:uppercase;
+            transition:color 0.3s; position:relative;
+        }
+        .nav-links a::after {
+            content:''; position:absolute; bottom:-4px; left:0;
+            width:0; height:1px; background:#c9a96e;
+            transition:width 0.3s;
+        }
+        .nav-links a:hover::after { width:100%; }
+        .navbar.scrolled .nav-links a { color:#1a1a1a; }
+        .nav-links a:hover { color:#c9a96e; }
+
+        .menu-toggle {
+            display:none; background:none; border:none;
+            font-size:1.5rem; color:#fff; cursor:pointer;
+        }
+        .navbar.scrolled .menu-toggle { color:#1a1a1a; }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height:100vh; display:flex; align-items:center;
+            justify-content:center; text-align:center;
+            background:linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            position:relative; overflow:hidden;
+        }
+        .hero::before {
+            content:''; position:absolute; inset:0;
+            background:radial-gradient(circle at 30% 50%, rgba(201,169,110,0.08) 0%, transparent 60%),
+                        radial-gradient(circle at 70% 50%, rgba(201,169,110,0.05) 0%, transparent 60%);
+        }
+        .hero-content { position:relative; z-index:1; }
+        .hero-subtitle {
+            font-size:0.85rem; letter-spacing:6px; text-transform:uppercase;
+            color:#c9a96e; margin-bottom:24px;
+        }
+        .hero-title {
+            font-size:5rem; font-weight:700; color:#fff;
+            line-height:1.1; margin-bottom:16px;
+        }
+        .hero-title span { color:#c9a96e; }
+        .hero-desc {
+            font-size:1.1rem; color:rgba(255,255,255,0.7);
+            font-weight:300; max-width:500px; margin:0 auto 40px;
+        }
+        .btn {
+            display:inline-block; padding:16px 48px;
+            background:#c9a96e; color:#fff; text-decoration:none;
+            font-size:0.8rem; letter-spacing:3px; text-transform:uppercase;
+            font-weight:600; transition:all 0.3s;
+        }
+        .btn:hover { background:#b8954f; transform:translateY(-2px); }
+        .btn-outline {
+            background:transparent; border:1px solid #c9a96e;
+            color:#c9a96e;
+        }
+        .btn-outline:hover { background:#c9a96e; color:#fff; }
+
+        .hero-scroll {
+            position:absolute; bottom:40px; left:50%; transform:translateX(-50%);
+            color:rgba(255,255,255,0.4); font-size:0.7rem;
+            letter-spacing:3px; text-transform:uppercase;
+            animation:scrollBounce 2s infinite;
+        }
+        @keyframes scrollBounce {
+            0%, 100% { transform:translateX(-50%) translateY(0); }
+            50% { transform:translateX(-50%) translateY(8px); }
+        }
+
+        /* ===== COLLECTION ===== */
+        .collection { background:#fff; }
+        .section-tag {
+            font-size:0.75rem; letter-spacing:4px; text-transform:uppercase;
+            color:#c9a96e; margin-bottom:12px;
+        }
+        .section-title {
+            font-size:2.8rem; font-weight:700; color:#1a1a1a;
+            margin-bottom:16px;
+        }
+        .section-desc {
+            color:#666; font-size:1.05rem; font-weight:300;
+            max-width:600px; margin:0 auto 60px;
+        }
+        .grid { display:grid; gap:30px; }
+        .grid-3 { grid-template-columns:repeat(3,1fr); }
+        .grid-2 { grid-template-columns:repeat(2,1fr); }
+
+        .product-card {
+            position:relative; overflow:hidden; cursor:pointer;
+            background:#fafafa;
+        }
+        .product-image {
+            width:100%; aspect-ratio:3/4; object-fit:cover;
+            display:block; transition:transform 0.6s;
+            background:linear-gradient(135deg, #f0f0f0, #e0e0e0);
+        }
+        .product-card:hover .product-image { transform:scale(1.05); }
+        .product-info { padding:20px 0; }
+        .product-name {
+            font-family:'Playfair Display',serif;
+            font-size:1.1rem; font-weight:600; margin-bottom:6px;
+        }
+        .product-price {
+            color:#c9a96e; font-weight:600; font-size:1.05rem;
+        }
+        .product-overlay {
+            position:absolute; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.3); display:flex; align-items:center;
+            justify-content:center; opacity:0; transition:opacity 0.4s;
+        }
+        .product-card:hover .product-overlay { opacity:1; }
+        .product-overlay .btn {
+            padding:12px 32px; font-size:0.75rem;
+        }
+
+        /* ===== ABOUT ===== */
+        .about {
+            background:#f5f2ed;
+        }
+        .about-content {
+            display:grid; grid-template-columns:1fr 1fr;
+            gap:80px; align-items:center;
+        }
+        .about-image {
+            width:100%; aspect-ratio:4/5; object-fit:cover;
+            background:linear-gradient(135deg, #e8e0d5, #d5cdc0);
+        }
+        .about-text .section-title { font-size:2.4rem; }
+        .about-text p {
+            color:#555; line-height:1.8; margin-bottom:16px;
+            font-weight:300;
+        }
+
+        /* ===== DIFFERENTIALS ===== */
+        .differentials {
+            background:#fff;
+        }
+        .diffs-grid { grid-template-columns:repeat(4,1fr); gap:40px; }
+        .diff-item { text-align:center; padding:40px 20px; }
+        .diff-icon {
+            font-size:2rem; color:#c9a96e; margin-bottom:20px;
+            display:inline-block;
+        }
+        .diff-item h3 {
+            font-size:1.1rem; margin-bottom:10px;
+        }
+        .diff-item p {
+            color:#777; font-size:0.9rem; font-weight:300;
+        }
+
+        /* ===== NEWSLETTER ===== */
+        .newsletter {
+            background:linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            text-align:center;
+        }
+        .newsletter .section-title { color:#fff; }
+        .newsletter .section-desc { color:rgba(255,255,255,0.7); }
+        .news-form {
+            display:flex; max-width:520px; margin:0 auto; gap:0;
+        }
+        .news-form input {
+            flex:1; padding:16px 20px; border:none; outline:none;
+            font-family:'Inter',sans-serif; font-size:0.95rem;
+        }
+        .news-form button {
+            padding:16px 36px; background:#c9a96e; color:#fff;
+            border:none; font-size:0.8rem; letter-spacing:2px;
+            text-transform:uppercase; font-weight:600; cursor:pointer;
+            transition:background 0.3s;
+        }
+        .news-form button:hover { background:#b8954f; }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background:#111; padding:60px 0 30px;
+            color:rgba(255,255,255,0.6);
+        }
+        .footer-grid { grid-template-columns:2fr 1fr 1fr 1fr; }
+        .footer-brand .logo { font-size:1.5rem; color:#fff; }
+        .footer-brand p { margin-top:16px; font-size:0.9rem; font-weight:300; line-height:1.7; }
+        .footer h4 {
+            font-size:0.85rem; letter-spacing:2px; text-transform:uppercase;
+            color:#fff; margin-bottom:20px;
+        }
+        .footer a {
+            display:block; color:rgba(255,255,255,0.5); text-decoration:none;
+            margin-bottom:10px; font-size:0.9rem; transition:color 0.3s;
+        }
+        .footer a:hover { color:#c9a96e; }
+        .footer-bottom {
+            border-top:1px solid rgba(255,255,255,0.08);
+            padding-top:30px; margin-top:40px;
+            display:flex; justify-content:space-between;
+            font-size:0.85rem;
+        }
+        .footer-social { display:flex; gap:16px; }
+        .footer-social a {
+            font-size:1.1rem; margin:0;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width:968px) {
+            .about-content { grid-template-columns:1fr; gap:40px; }
+            .diffs-grid { grid-template-columns:repeat(2,1fr); }
+            .footer-grid { grid-template-columns:1fr 1fr; gap:30px; }
+            .hero-title { font-size:3.5rem; }
+        }
+        @media (max-width:768px) {
+            .nav-links {
+                display:none; position:fixed; top:0; left:0;
+                width:100%; height:100vh; background:rgba(0,0,0,0.95);
+                flex-direction:column; align-items:center;
+                justify-content:center; gap:40px;
+            }
+            .nav-links.active { display:flex; }
+            .nav-links a { font-size:1.1rem; color:#fff !important; }
+            .menu-toggle { display:block; }
+            .close-menu {
+                position:absolute; top:24px; right:24px;
+                font-size:1.8rem; color:#fff; background:none; border:none;
+                cursor:pointer;
+            }
+            .grid-3, .grid-2 { grid-template-columns:1fr; }
+            .hero-title { font-size:2.6rem; }
+            .section-title { font-size:2rem; }
+            .diffs-grid { grid-template-columns:1fr 1fr; }
+            .footer-grid { grid-template-columns:1fr; }
+            .news-form { flex-direction:column; }
+            .news-form button { width:100%; }
+            .footer-bottom { flex-direction:column; gap:16px; text-align:center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="#" class="logo">LUXE<span>.</span></a>
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <button class="close-menu" id="closeMenu">&times;</button>
+                <li><a href="#collection">Coleção</a></li>
+                <li><a href="#about">Sobre</a></li>
+                <li><a href="#differentials">Diferenciais</a></li>
+                <li><a href="#contact">Contato</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content container">
+            <p class="hero-subtitle reveal">Nova Coleção 2026</p>
+            <h1 class="hero-title reveal">Elegância que <span>Inspira</span></h1>
+            <p class="hero-desc reveal">Moda feminina com design atemporal, tecidos selecionados e acabamento impecável para mulheres que valorizam estilo e sofisticação.</p>
+            <a href="#collection" class="btn reveal">Explorar Coleção</a>
+        </div>
+        <p class="hero-scroll">Role para explorar</p>
+    </section>
+
+    <!-- COLLECTION -->
+    <section class="collection section" id="collection">
+        <div class="container">
+            <p class="section-tag text-center reveal">Coleção</p>
+            <h2 class="section-title text-center reveal">Destaques da Temporada</h2>
+            <p class="section-desc text-center reveal">Peças cuidadosamente selecionadas para compor um guarda-roupa sofisticado e versátil.</p>
+            <div class="grid grid-3">
+                <div class="product-card reveal">
+                    <div class="product-image" style="background:linear-gradient(135deg, #d4c5b5, #c4b5a5);"></div>
+                    <div class="product-overlay"><a href="#" class="btn">Ver Detalhes</a></div>
+                    <div class="product-info">
+                        <h3 class="product-name">Blazer Estruturado</h3>
+                        <p class="product-price">R$ 890,00</p>
+                    </div>
+                </div>
+                <div class="product-card reveal">
+                    <div class="product-image" style="background:linear-gradient(135deg, #e8ddd0, #d8cdc0);"></div>
+                    <div class="product-overlay"><a href="#" class="btn">Ver Detalhes</a></div>
+                    <div class="product-info">
+                        <h3 class="product-name">Vestido Plissado</h3>
+                        <p class="product-price">R$ 650,00</p>
+                    </div>
+                </div>
+                <div class="product-card reveal">
+                    <div class="product-image" style="background:linear-gradient(135deg, #c5b8a8, #b5a898);"></div>
+                    <div class="product-overlay"><a href="#" class="btn">Ver Detalhes</a></div>
+                    <div class="product-info">
+                        <h3 class="product-name">Conjunto de Linho</h3>
+                        <p class="product-price">R$ 720,00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about section" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="reveal">
+                    <div class="about-image" style="background:linear-gradient(135deg, #dcd0c0, #ccc0b0);"></div>
+                </div>
+                <div class="about-text reveal">
+                    <p class="section-tag">Nossa História</p>
+                    <h2 class="section-title">Moda que Transcende <br>Estações</h2>
+                    <p>A Luxe nasceu da paixão por moda com propósito. Cada peça é pensada para valorizar a feminilidade, o conforto e a autenticidade de quem veste.</p>
+                    <p>Trabalhamos com materiais nobres e processos sustentáveis, unindo design contemporâneo ao cuidado artesanal que faz toda a diferença.</p>
+                    <br>
+                    <a href="#collection" class="btn">Conheça Nossas Peças</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIFFERENTIALS -->
+    <section class="differentials section" id="differentials">
+        <div class="container">
+            <p class="section-tag text-center reveal">Diferenciais</p>
+            <h2 class="section-title text-center reveal">Por que escolher a Luxe?</h2>
+            <p class="section-desc text-center reveal">Qualidade, design e cuidado em cada detalhe.</p>
+            <div class="grid diffs-grid">
+                <div class="diff-item reveal">
+                    <i class="fas fa-feather-alt diff-icon"></i>
+                    <h3>Tecidos Nobres</h3>
+                    <p>Selecionamos os melhores tecidos para garantir caimento perfeito e durabilidade.</p>
+                </div>
+                <div class="diff-item reveal">
+                    <i class="fas fa-cut diff-icon"></i>
+                    <h3>Design Exclusivo</h3>
+                    <p>Criações originais com modelagem pensada para valorizar todos os corpos.</p>
+                </div>
+                <div class="diff-item reveal">
+                    <i class="fas fa-leaf diff-icon"></i>
+                    <h3>Produção Sustentável</h3>
+                    <p>Compromisso com processos que respeitam o meio ambiente e as pessoas.</p>
+                </div>
+                <div class="diff-item reveal">
+                    <i class="fas fa-truck diff-icon"></i>
+                    <h3>Entrega Rápida</h3>
+                    <p>Enviamos para todo o Brasil com embalagem especial e frete grátis acima de R$ 500.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter section" id="contact">
+        <div class="container">
+            <p class="section-tag text-center reveal">Fique por Dentro</p>
+            <h2 class="section-title text-center reveal">Receba Novidades</h2>
+            <p class="section-desc text-center reveal">Cadastre-se e seja a primeira a saber dos lançamentos e promoções exclusivas.</p>
+            <form class="news-form reveal" onsubmit="event.preventDefault(); alert('Obrigado por se inscrever!');">
+                <input type="email" placeholder="Seu melhor e-mail" required>
+                <button type="submit">Inscrever</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="grid footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">LUXE<span>.</span></a>
+                    <p>Moda feminina com design atemporal e sofisticação. Peças que contam histórias e valorizam sua essência.</p>
+                </div>
+                <div>
+                    <h4>Links</h4>
+                    <a href="#collection">Coleção</a>
+                    <a href="#about">Sobre</a>
+                    <a href="#differentials">Diferenciais</a>
+                </div>
+                <div>
+                    <h4>Atendimento</h4>
+                    <a href="#">(11) 99999-8888</a>
+                    <a href="#">contato@luxestore.com</a>
+                    <a href="#">Seg a Sex: 9h às 18h</a>
+                </div>
+                <div>
+                    <h4>Redes Sociais</h4>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                        <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Luxe Fashion Store. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navbar = document.getElementById('navbar');
+            const menuToggle = document.getElementById('menuToggle');
+            const closeMenu = document.getElementById('closeMenu');
+            const navLinks = document.getElementById('navLinks');
+
+            window.addEventListener('scroll', () => {
+                navbar.classList.toggle('scrolled', window.scrollY > 60);
+            });
+
+            menuToggle.addEventListener('click', () => navLinks.classList.add('active'));
+            closeMenu.addEventListener('click', () => navLinks.classList.remove('active'));
+            navLinks.querySelectorAll('a').forEach(a => {
+                a.addEventListener('click', () => navLinks.classList.remove('active'));
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
